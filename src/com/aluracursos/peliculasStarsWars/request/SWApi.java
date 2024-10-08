@@ -1,6 +1,6 @@
 package com.aluracursos.peliculasStarsWars.request;
 
-import com.aluracursos.peliculasStarsWars.modulos.Titulo;
+
 import com.aluracursos.peliculasStarsWars.principal.CountTitles;
 import com.aluracursos.peliculasStarsWars.principal.TitulosSWApi;
 import com.google.gson.Gson;
@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
 
 public class SWApi {
     private HttpClient client;
@@ -23,19 +24,26 @@ public class SWApi {
 
     }
 
-    private String request(int busqueda) throws IOException, InterruptedException {
+    private String request(int busqueda)  {
         if (busqueda != 0){
-            this.direccion = "https://swapi.dev/api/films/" + busqueda + "/";
+            this.direccion = "https://swapi.py4e.com/api/films/" + busqueda + "/";
         } else {
-            this.direccion = "https://swapi.dev/api/films/";
+            this.direccion = "https://swapi.py4e.com/api/films/";
         }
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(direccion))
                 .build();
 
-        HttpResponse<String> response = client
-                .send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = null;
+        try {
+            response = client
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         this.json = response.body();
         return json;
